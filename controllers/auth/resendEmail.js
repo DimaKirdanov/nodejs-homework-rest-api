@@ -8,7 +8,10 @@ const resendEmail = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw RequestError(404);
+    throw RequestError(404, "Email not found");
+  }
+  if (user.verify) {
+    throw RequestError(404, "Email already verify");
   }
 
   const mail = {
@@ -19,7 +22,7 @@ const resendEmail = async (req, res) => {
   await sendEmail(mail);
 
   res.json({
-    message: "Email send success",
+    message: "Email resend success",
   });
 };
 
